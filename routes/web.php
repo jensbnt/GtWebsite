@@ -20,4 +20,9 @@ Route::group(['prefix' => 'cars'], function () {
         'uses' => 'CarController@getCarsIndex',
         'as' => 'cars.index'
     ]);
+
+    Route::get('view/{id}', [
+        'uses' => 'CarController@getCarsView',
+        'as' => 'cars.view'
+    ]);
 });

@@ -27,6 +27,7 @@
                     <li class="list-group-item">Seeded car database</li>
                     <li class="list-group-item">Garage</li>
                     <li class="list-group-item">Garage backup</li>
+                    <li class="list-group-item">Compare cars</li>
                 </ul>
             </div>
         </div>
