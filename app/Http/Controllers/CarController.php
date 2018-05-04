@@ -8,10 +8,19 @@ use Illuminate\Support\Facades\DB;
 
 class CarController extends Controller
 {
-    public function getCarsIndex() {
-        $cars = Car::paginate(30);
+    public function getCarsIndex(Request $request) {
+        $query = Car::where('make', 'like', '%' . $request->input('make') . '%')
+            ->where('name', 'like', '%' . $request->input('name') . '%')
+            ->where('category', 'like', '%' . $request->input('category') . '%');
+            //->orderBy('price', 'desc');
 
-        return view('cars.index', ['cars' => $cars]);
+        $cars = $query->paginate(30);
+        $count = $query->count();
+
+        $makes = Car::select('make')->groupBy('make')->get();
+        $categories = Car::select('category')->groupBy('category')->get();
+
+        return view('cars.index', ['cars' => $cars->appends($request->except('page')), 'count' => $count, 'makes' => $makes, 'categories' => $categories]);
     }
 
     public function getCarsView($id) {

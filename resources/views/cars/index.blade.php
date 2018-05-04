@@ -9,8 +9,45 @@
         </div>
         <div class="row">
             <div class="col-md">
+                <form class="form-horizontal" method="GET" action="{{ route('cars.index') }}">
+                    {{ csrf_field() }}
+
+                    <div class="row form-group">
+                        <div class="col-md-2">
+                            <select id="make" class="form-control" name="make">
+                                <option selected></option>
+                                @foreach($makes as $make)
+                                    <option value="{{ $make->make }}">{{ $make->make }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-2">
+                            <select id="category" class="form-control" name="category">
+                                <option selected></option>
+                                @foreach($categories as $category)
+                                    <option value="{{ $category->category }}">{{ $category->category }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col-md-6">
+                            <input id="name" type="text" class="form-control" name="name" placeholder="name" value="">
+                        </div>
+
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-dark btn-block">
+                                Filter
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md">
                 <table class="table table-striped table-hover">
-                    <caption>Cars - XXX results</caption>
+                    <caption>Cars - {{ $count }} results</caption>
                     <thead class="thead-dark">
                     <tr>
                         <th scope="col" class="text-left" style="width: 15%">Make</th>
