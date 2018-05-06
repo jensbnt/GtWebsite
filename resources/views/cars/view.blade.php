@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md">
+            <div class="col-md-6 offset-md-3">
                 @include('partials.message')
             </div>
         </div>
@@ -11,7 +11,7 @@
             <div class="col-md-6 offset-md-3">
                 <div class="card mb-3">
                     <div class="card-body">
-                        <h2>{{ $car->make . " " . $car->name }}</h2>
+                        <h2>{{ $car->make . " - " . $car->name }}</h2>
 
                         <br>
 
@@ -80,8 +80,8 @@
                         </div>
                     </div>
                     <div class="card-footer text-muted">
-                        <span class="text-left">Garage: 5</span> -
-                        <a href="">Edit</a>
+                        <span class="text-left">Garage: {{ $car->car_count }}</span> -
+                        <a href="{{ route('cars.edit', ['id' => $car->id]) }}">Edit</a>
                     </div>
                 </div>
             </div>

@@ -25,4 +25,21 @@ Route::group(['prefix' => 'cars'], function () {
         'uses' => 'CarController@getCarsView',
         'as' => 'cars.view'
     ]);
+
+    Route::get('edit/{id}', [
+        'uses' => 'CarController@getCarsEdit',
+        'as' => 'cars.edit'
+    ]);
+
+    Route::post('edit/{id}', [
+        'uses' => 'CarController@postCarsEdit',
+        'as' => 'cars.edit'
+    ]);
+});
+
+Route::group(['prefix' => 'garage'], function () {
+    Route::get('', [
+        'uses' => 'CarController@getGarageIndex',
+        'as' => 'garage.index'
+    ]);
 });
