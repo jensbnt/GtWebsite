@@ -6,6 +6,7 @@
         <ul class="nav navbar-nav">
             <li class="nav-item"><a class="nav-link" href="{{ route('cars.index') }}">Cars</a></li>
             <li class="nav-item"><a class="nav-link" href="{{ route('garage.index') }}">Garage</a></li>
+            <li class="nav-item"><a class="nav-link" href="{{ route('stats.index') }}">Stats</a></li>
         </ul>
         <ul class="nav navbar-nav ml-auto">
         </ul>

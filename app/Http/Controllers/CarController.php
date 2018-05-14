@@ -66,22 +66,38 @@ class CarController extends Controller
 
 
 
-        return redirect()->route('cars.view', ['id' => $id])->with('info', 'Car updated');
+        return redirect()->back()->with('info', 'Car updated');
     }
 
     /* GARAGE */
 
     public function getGarageIndex() {
         $cars = Car::select('cars.*', 'garage_cars.car_count')
-            ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')->paginate(30);
+            ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
+            ->orderBy('make')
+            ->paginate(30);
 
-        $count = Car::select('cars.*', 'garage_cars.car_count')
-            ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')->count();
+        $count = GarageCar::sum('car_count');
 
         $garagevalue = Car::select(DB::raw('SUM(garage_cars.car_count * cars.price) as value'))
             ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
             ->first();
 
         return view('garage.index', ['cars' => $cars, 'count' => $count, 'garagevalue' => $garagevalue]);
+    }
+
+    /* STATS */
+
+    public function getStatsIndex() {
+        $stat_list = Car::select('cars.make', DB::raw('COUNT(garage_cars.id) as garage_ct,COUNT(cars.id) as ct,ROUND(COUNT(garage_cars.id) / COUNT(cars.id) * 100, 1) as prc'))
+            ->leftJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
+            ->groupBy('cars.make')
+            ->get();
+
+        $total = Car::select(DB::raw('ROUND(COUNT(garage_cars.id) / COUNT(cars.id) * 100, 1) as prc'))
+            ->leftJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
+            ->first();
+
+        return view('stats.index', ['stat_list' => $stat_list, 'total_prc' => $total->prc]);
     }
 }

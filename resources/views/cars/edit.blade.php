@@ -3,7 +3,7 @@
 @section('content')
     <div class="container">
         <div class="row">
-            <div class="col-md">
+            <div class="col-md-8 offset-md-2">
                 @include('partials.message')
             </div>
         </div>

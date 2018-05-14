@@ -43,3 +43,10 @@ Route::group(['prefix' => 'garage'], function () {
         'as' => 'garage.index'
     ]);
 });
+
+Route::group(['prefix' => 'stats'], function () {
+    Route::get('', [
+        'uses' => 'CarController@getStatsIndex',
+        'as' => 'stats.index'
+    ]);
+});
