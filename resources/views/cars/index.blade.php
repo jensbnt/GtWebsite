@@ -52,10 +52,10 @@
                     <tr>
                         <th scope="col" class="text-left" style="width: 15%">Make</th>
                         <th scope="col" class="text-left" style="width: 50%">Name</th>
+                        <th scope="col" class="text-left" style="width: 10%"></th>
                         <th scope="col" class="text-left" style="width: 10%">Ct</th>
                         <th scope="col" class="text-right" style="width: 5%">HP</th>
                         <th scope="col" class="text-right" style="width: 10%">Price</th>
-                        <th scope="col" class="text-left" style="width: 10%">Drive</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -63,10 +63,10 @@
                         <tr>
                             <td class="text-left">{{ $cars[$i]->make }}</td>
                             <td class="text-left"><a href="{{ route('cars.view', ['id' => $cars[$i]->id]) }}">{{ $cars[$i]->name }}</a></td>
+                            <td class="text-left"><span class="badge badge-primary">{{ $cars[$i]->car_count }}</span></td>
                             <td class="text-left">{{ $cars[$i]->category }}</td>
                             <td class="text-right">{{ $cars[$i]->power }}</td>
                             <td class="text-right">{{ number_format($cars[$i]->price, 0, ',', '.') }}</td>
-                            <td class="text-left">{{ $cars[$i]->drive }}</td>
                         </tr>
                     @endfor
                     </tbody>

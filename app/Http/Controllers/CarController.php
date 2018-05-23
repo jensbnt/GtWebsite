@@ -10,10 +10,12 @@ use Illuminate\Support\Facades\DB;
 class CarController extends Controller
 {
     public function getCarsIndex(Request $request) {
-        $query = Car::where('make', 'like', '%' . $request->input('make') . '%')
+        $query = Car::select('cars.*', 'garage_cars.car_count')
+            ->leftJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
+            ->where('make', 'like', '%' . $request->input('make') . '%')
             ->where('name', 'like', '%' . $request->input('name') . '%')
-            ->where('category', 'like', '%' . $request->input('category') . '%');
-            //->orderBy('price', 'desc');
+            ->where('category', 'like', '%' . $request->input('category') . '%')
+            ->orderBy('make');
 
         $cars = $query->paginate(30);
         $count = $query->count();
@@ -69,23 +71,6 @@ class CarController extends Controller
         return redirect()->back()->with('info', 'Car updated');
     }
 
-    /* GARAGE */
-
-    public function getGarageIndex() {
-        $cars = Car::select('cars.*', 'garage_cars.car_count')
-            ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
-            ->orderBy('make')
-            ->paginate(30);
-
-        $count = GarageCar::sum('car_count');
-
-        $garagevalue = Car::select(DB::raw('SUM(garage_cars.car_count * cars.price) as value'))
-            ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
-            ->first();
-
-        return view('garage.index', ['cars' => $cars, 'count' => $count, 'garagevalue' => $garagevalue]);
-    }
-
     /* STATS */
 
     public function getStatsIndex() {
@@ -98,6 +83,12 @@ class CarController extends Controller
             ->leftJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
             ->first();
 
-        return view('stats.index', ['stat_list' => $stat_list, 'total_prc' => $total->prc]);
+        $count = GarageCar::sum('car_count');
+
+        $garagevalue = Car::select(DB::raw('SUM(garage_cars.car_count * cars.price) as value'))
+            ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
+            ->first();
+
+        return view('stats.index', ['stat_list' => $stat_list, 'total_prc' => $total->prc, 'count' => $count, 'garagevalue' => $garagevalue]);
     }
 }

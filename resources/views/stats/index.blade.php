@@ -12,8 +12,9 @@
                 <div class="card mb-3">
                     <div class="card-body text-center">
                         <h2 class="display-4">Stats</h2>
-                        <p>
-                            <b>Total cars:</b>
+                        <br>
+                        <p><b>Total car value:</b> {{ number_format($garagevalue->value, 0, ',', '.') }} Cr</p>
+                        <p><b>Total cars:</b> {{ $count }}
                             <div class="progress">
                                 <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{ $total_prc }}%;">{{ $total_prc }} %</div>
                             </div>

@@ -37,13 +37,6 @@ Route::group(['prefix' => 'cars'], function () {
     ]);
 });
 
-Route::group(['prefix' => 'garage'], function () {
-    Route::get('', [
-        'uses' => 'CarController@getGarageIndex',
-        'as' => 'garage.index'
-    ]);
-});
-
 Route::group(['prefix' => 'stats'], function () {
     Route::get('', [
         'uses' => 'CarController@getStatsIndex',
