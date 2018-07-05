@@ -35,11 +35,47 @@ Route::group(['prefix' => 'cars'], function () {
         'uses' => 'CarController@postCarsEdit',
         'as' => 'cars.edit'
     ]);
+
+    Route::get('new', [
+        'uses' => 'CarController@getCarsNew',
+        'as' => 'cars.new'
+    ]);
+
+    Route::post('new', [
+        'uses' => 'CarController@postCarsNew',
+        'as' => 'cars.new'
+    ]);
 });
 
 Route::group(['prefix' => 'stats'], function () {
     Route::get('', [
         'uses' => 'CarController@getStatsIndex',
         'as' => 'stats.index'
+    ]);
+});
+
+Route::group(['prefix' => 'api'], function () {
+    Route::get('makes', [
+        'uses' => 'ApiController@apiMakesIndex'
+    ]);
+
+    Route::get('makes/{make}', [
+        'uses' => 'ApiController@apiMakesGet'
+    ]);
+
+    Route::get('categories/', [
+        'uses' => 'ApiController@apiCategoriesIndex'
+    ]);
+
+    Route::get('categories/{category}', [
+        'uses' => 'ApiController@apiCategoriesGet'
+    ]);
+
+    Route::get('drives/', [
+        'uses' => 'ApiController@apiDrivesIndex'
+    ]);
+
+    Route::get('drives/{drive}', [
+        'uses' => 'ApiController@apiDrivesGet'
     ]);
 });

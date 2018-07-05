@@ -18,6 +18,7 @@
             <div class="col-md-6">
                 <ul class="list-group mb-3">
                     <li class="list-group-item"><h1>Recent Updates</h1></li>
+                    <li class="list-group-item"><b>v1.3</b> - Add cars</li>
                     <li class="list-group-item"><b>v1.2</b> - Garage view update</li>
                     <li class="list-group-item"><b>v1.1</b> - Stats</li>
                     <li class="list-group-item"><b>v1.0</b> - Beta stage</li>
@@ -27,8 +28,6 @@
             <div class="col-md-6">
                 <ul class="list-group mb-3">
                     <li class="list-group-item"><h1>Future Updates</h1></li>
-                    <li class="list-group-item">Seeded car database</li>
-                    <li class="list-group-item">Garage</li>
                     <li class="list-group-item">Garage backup</li>
                     <li class="list-group-item">Compare cars</li>
                 </ul>

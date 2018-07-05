@@ -47,7 +47,7 @@
         <div class="row">
             <div class="col-md">
                 <table class="table table-striped table-hover">
-                    <caption>Cars - {{ $count }} results</caption>
+                    <caption>Cars - {{ $count }} results - <a href="{{ route('cars.new') }}">new</a> </caption>
                     <thead class="thead-dark">
                     <tr>
                         <th scope="col" class="text-left" style="width: 15%">Make</th>

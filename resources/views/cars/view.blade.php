@@ -71,7 +71,7 @@
 
                         <div class="row">
                             <div class="col-md-4"><b>Price:</b></div>
-                            <div class="col-md">{{ number_format($car->price, 0, ',', '.') }} Cr</div>
+                            <div class="col-md">{{ number_format($car->price, 0, ',', '.') }} Cr.</div>
                         </div>
 
                         <div class="row">
