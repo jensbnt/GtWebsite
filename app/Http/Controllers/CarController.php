@@ -9,6 +9,18 @@ use Illuminate\Support\Facades\DB;
 
 class CarController extends Controller
 {
+    // HOMEPAGE
+    public function getHomePage()
+    {
+        $latest_cars = Car::select('make', 'name')
+            ->orderBy('updated_at', 'desc')
+            ->limit(10)
+            ->get();
+
+        return view('pages.index', ['latest_cars' => $latest_cars]);
+    }
+
+    // TODO: NAMES
     public function getCarsIndex(Request $request)
     {
         $query = Car::select('cars.*', 'garage_cars.car_count')
@@ -16,7 +28,8 @@ class CarController extends Controller
             ->where('make', 'like', '%' . $request->input('make') . '%')
             ->where('name', 'like', '%' . $request->input('name') . '%')
             ->where('category', 'like', '%' . $request->input('category') . '%')
-            ->orderBy('make');
+            ->orderBy('make')
+            ->orderBy('name');
 
         $cars = $query->paginate(30);
         $count = $query->count();
@@ -39,7 +52,7 @@ class CarController extends Controller
 
     public function getCarsEdit($id)
     {
-        $car = Car::select('cars.*', DB::raw('IFNULL(garage_cars.car_count, 0) as car_count'))
+        $car = Car::select('cars.*', DB::raw('IFNULL(garage_cars.car_count, 0) as count'))
             ->leftJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
             ->where('cars.id', $id)
             ->first();
@@ -50,20 +63,49 @@ class CarController extends Controller
     public function postCarsEdit($id, Request $request)
     {
         $this->validate($request, [
-            'car_count' => 'required|numeric|min:0'
+            'make' => 'required',
+            'name' => 'required',
+            'category' => 'required',
+            'speed' => 'required|numeric|min:0|max:10',
+            'acceleration' => 'required|numeric|min:0|max:10',
+            'braking' => 'required|numeric|min:0|max:10',
+            'cornering' => 'required|numeric|min:0|max:10',
+            'stability' => 'required|numeric|min:0|max:10',
+            'power' => 'required|numeric|min:0',
+            'price' => 'required|numeric|min:0',
+            'drive' => 'required',
+            'count' => 'required|numeric|min:0'
         ]);
 
+        // Car
+        $car = Car::find($id);
+
+        $car->make = $request->input('make');
+        $car->name = $request->input('name');
+        $car->category = $request->input('category');
+        $car->speed = $request->input('speed');
+        $car->acceleration = $request->input('acceleration');
+        $car->braking = $request->input('braking');
+        $car->cornering = $request->input('cornering');
+        $car->stability = $request->input('stability');
+        $car->power = $request->input('power');
+        $car->price = $request->input('price');
+        $car->drive = $request->input('drive');
+
+        $car->save();
+
+        // Garage car
         $garagecar = GarageCar::where('car_id', $id)->first();
 
-        if ($garagecar == null && $request->input('car_count') != 0) {
+        if ($garagecar == null && $request->input('count') != 0) {
             $garagecar = new GarageCar([
                 'car_id' => $id,
-                'car_count' => $request->input('car_count')
+                'car_count' => $request->input('count')
             ]);
             $garagecar->save();
         } else if ($garagecar != null) {
-            if ($request->input('car_count') != 0) {
-                $garagecar->car_count = $request->input('car_count');
+            if ($request->input('count') != 0) {
+                $garagecar->car_count = $request->input('count');
                 $garagecar->save();
             } else {
                 $garagecar->delete();

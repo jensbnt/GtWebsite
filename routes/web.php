@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('pages.index');
-})->name('pages.index');
+Route::get('/', [
+    'uses' => 'CarController@getHomePage',
+    'as' => 'pages.index'
+]);
 
 Route::group(['prefix' => 'cars'], function () {
     Route::get('', [
