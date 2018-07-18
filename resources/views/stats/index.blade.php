@@ -14,10 +14,13 @@
                         <h2 class="display-4">Stats</h2>
                         <br>
                         <p><b>Total car value:</b> {{ number_format($garagevalue->value, 0, ',', '.') }} Cr</p>
+                        <p><b>Cost of remaining cars:</b> {{ number_format($not_owned_cars_price, 0, ',', '.') }} Cr</p>
                         <p><b>Total cars:</b> {{ $count }}
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: {{ $total_prc }}%;">{{ $total_prc }} %</div>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar"
+                                 style="width: {{ $total_prc }}%;">{{ $total_prc }} %
                             </div>
+                        </div>
                         </p>
                     </div>
                 </div>
@@ -40,7 +43,9 @@
                             <td>
                                 @if($stat->prc != 0)
                                     <div class="progress">
-                                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: {{ $stat->prc }}%;">{{ $stat->prc }} %</div>
+                                        <div class="progress-bar progress-bar-striped bg-success" role="progressbar"
+                                             style="width: {{ $stat->prc }}%;">{{ $stat->prc }} %
+                                        </div>
                                     </div>
                                 @else
                                     You don't own a {{ $stat->make }}

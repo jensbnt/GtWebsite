@@ -167,12 +167,21 @@ class CarController extends Controller
             ->leftJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
             ->first();
 
+        $not_owned_cars_price = Car::select('cars.price')
+            ->whereNotIn('cars.id', function ($query){
+                $query->select('cars.id')
+                    ->from('cars')
+                    ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
+                    ->get();
+            })
+            ->sum('cars.price');
+
         $count = GarageCar::sum('car_count');
 
         $garagevalue = Car::select(DB::raw('SUM(garage_cars.car_count * cars.price) as value'))
             ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
             ->first();
 
-        return view('stats.index', ['stat_list' => $stat_list, 'total_prc' => $total->prc, 'count' => $count, 'garagevalue' => $garagevalue]);
+        return view('stats.index', ['stat_list' => $stat_list, 'total_prc' => $total->prc, 'count' => $count, 'garagevalue' => $garagevalue, 'not_owned_cars_price' => $not_owned_cars_price]);
     }
 }
