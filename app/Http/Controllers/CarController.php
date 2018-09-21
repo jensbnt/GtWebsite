@@ -12,35 +12,34 @@ class CarController extends Controller
     // HOMEPAGE
     public function getHomePage()
     {
-        $latest_cars = Car::select('make', 'name')
-            ->orderBy('updated_at', 'desc')
+        $last_acquired_cars = Car::select('make', 'name')
+            ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
+            ->orderBy('garage_cars.updated_at', 'desc')
             ->limit(10)
             ->get();
 
-        return view('pages.index', ['latest_cars' => $latest_cars]);
+        return view('pages.index', ['last_acquired_cars' => $last_acquired_cars]);
     }
 
     // TODO: NAMES
     public function getCarsIndex(Request $request)
     {
-        $query = Car::select('cars.*', 'garage_cars.car_count')
+        $cars = Car::select('cars.*', 'garage_cars.car_count')
             ->leftJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
             ->where('make', 'like', '%' . $request->input('make') . '%')
             ->where('name', 'like', '%' . $request->input('name') . '%')
             ->where('category', 'like', '%' . $request->input('category') . '%')
             ->orderBy('make')
-            ->orderBy('name');
-
-        $cars = $query->paginate(30);
-        $count = $query->count();
+            ->orderBy('name')
+            ->paginate(30);
 
         $makes = Car::select('make')->groupBy('make')->get();
         $categories = Car::select('category')->groupBy('category')->get();
 
-        return view('cars.index', ['cars' => $cars->appends($request->except('page')), 'count' => $count, 'makes' => $makes, 'categories' => $categories]);
+        return view('cars.index', ['cars' => $cars->appends($request->except('page')), 'makes' => $makes, 'categories' => $categories]);
     }
 
-    public function getCarsView($id)
+    public function getCarsView($id, Request $request)
     {
         $car = Car::select("cars.*", DB::raw("ROUND((speed + acceleration + braking + cornering + stability) / 5, 1) as average, IFNULL(garage_cars.car_count, 0) as car_count"))
             ->leftJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
@@ -48,6 +47,29 @@ class CarController extends Controller
             ->first();
 
         return view('cars.view', ['car' => $car]);
+    }
+
+    public function postCarsView($id, Request $request)
+    {
+        $max_cars = 3;
+
+        if (!is_array($request->session()->get('compare_cars'))) {
+            $request->session()->remove('compare_cars');
+            $request->session()->put('compare_cars', []);
+        }
+
+        $size = count($request->session()->get('compare_cars'));
+
+        if ($size >= $max_cars) {
+            return redirect()->route('cars.view', ['id' => $id])->with('compare', "Maximum selection reached (" . $size . "/" . $max_cars . ")");
+        } elseif (!in_array($id, $request->session()->get('compare_cars'))) {
+            $request->session()->push('compare_cars', $id);
+            $request->session()->save();
+            return redirect()->route('cars.view', ['id' => $id])->with('compare', "Selection added (" . ($size + 1) . "/" . $max_cars . ")");
+        } else {
+            return redirect()->route('cars.view', ['id' => $id])->with('compare', "Already selected");
+        }
+
     }
 
     public function getCarsEdit($id)
@@ -151,37 +173,6 @@ class CarController extends Controller
         ]);
         $car->save();
 
-        return redirect()->route('cars.index')->with('info', $car->name . " added");
-    }
-
-    /* STATS */
-
-    public function getStatsIndex()
-    {
-        $stat_list = Car::select('cars.make', DB::raw('COUNT(garage_cars.id) as garage_ct,COUNT(cars.id) as ct,ROUND(COUNT(garage_cars.id) / COUNT(cars.id) * 100, 1) as prc'))
-            ->leftJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
-            ->groupBy('cars.make')
-            ->get();
-
-        $total = Car::select(DB::raw('ROUND(COUNT(garage_cars.id) / COUNT(cars.id) * 100, 1) as prc'))
-            ->leftJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
-            ->first();
-
-        $not_owned_cars_price = Car::select('cars.price')
-            ->whereNotIn('cars.id', function ($query){
-                $query->select('cars.id')
-                    ->from('cars')
-                    ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
-                    ->get();
-            })
-            ->sum('cars.price');
-
-        $count = GarageCar::sum('car_count');
-
-        $garagevalue = Car::select(DB::raw('SUM(garage_cars.car_count * cars.price) as value'))
-            ->rightJoin('garage_cars', 'cars.id', 'garage_cars.car_id')
-            ->first();
-
-        return view('stats.index', ['stat_list' => $stat_list, 'total_prc' => $total->prc, 'count' => $count, 'garagevalue' => $garagevalue, 'not_owned_cars_price' => $not_owned_cars_price]);
+        return redirect()->route('cars.view', ['id' => $car->id])->with('info', $car->name . " added");
     }
 }

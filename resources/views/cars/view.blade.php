@@ -10,11 +10,10 @@
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <div class="card mb-3">
+                    <div class="card-header text-center">
+                        <h2>{{ $car->name }}</h2>
+                    </div>
                     <div class="card-body">
-                        <h2>{{ $car->make . " - " . $car->name }}</h2>
-
-                        <br>
-
                         <div class="row">
                             <div class="col-md-4"><b>Make:</b></div>
                             <div class="col-md">{{ $car->make }}</div>
@@ -78,10 +77,26 @@
                             <div class="col-md-4"><b>Drive:</b></div>
                             <div class="col-md">{{ $car->drive }}</div>
                         </div>
+
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-4"><b>Garage:</b></div>
+                            <div class="col-md">{{ $car->car_count }}</div>
+                        </div>
                     </div>
                     <div class="card-footer text-muted">
-                        <span class="text-left">Garage: {{ $car->car_count }}</span> -
-                        <a href="{{ route('cars.edit', ['id' => $car->id]) }}">Edit</a>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <a href="{{ route('cars.edit', ['id' => $car->id]) }}" class="btn btn-primary btn-block">Edit</a>
+                            </div>
+                            <div class="col-md-6">
+                                <form method="POST" action="{{ route('cars.view', ['id' => $car->id]) }}">
+                                    {{ csrf_field() }}
+                                    <button type="submit" class="btn btn-info btn-block">Compare</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

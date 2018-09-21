@@ -20,6 +20,7 @@
             <div class="col-md-6">
                 <ul class="list-group mb-3">
                     <li class="list-group-item"><h1>Recent Updates</h1></li>
+                    <li class="list-group-item"><b>v1.5</b> - Compare cars</li>
                     <li class="list-group-item"><b>v1.4</b> - Edit cars</li>
                     <li class="list-group-item"><b>v1.3</b> - Add cars</li>
                     <li class="list-group-item"><b>v1.2</b> - Garage view update</li>
@@ -30,8 +31,8 @@
             </div>
             <div class="col-md-6">
                 <ul class="list-group mb-3">
-                    <li class="list-group-item"><h1>Last updated cars</h1></li>
-                    @foreach($latest_cars as $car)
+                    <li class="list-group-item"><h1>Last acquired cars</h1></li>
+                    @foreach($last_acquired_cars as $car)
                         <li class="list-group-item">{{ $car->make }} ♦ {{ $car->name }}</li>
                     @endforeach
                 </ul>

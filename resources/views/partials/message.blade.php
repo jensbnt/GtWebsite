@@ -6,4 +6,8 @@
     <div class="alert alert-danger" role="alert">
         {{ Session::get('fail') }}
     </div>
+@elseif(Session::has('compare'))
+    <div class="alert alert-info" role="alert">
+        {{ Session::get('compare') }} ♦ <a href="{{ route('compare.index') }}">Compare</a>
+    </div>
 @endif

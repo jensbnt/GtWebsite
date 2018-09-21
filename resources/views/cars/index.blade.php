@@ -12,27 +12,29 @@
                 <form class="form-horizontal" method="GET" action="{{ route('cars.index') }}">
                     {{ csrf_field() }}
 
-                    <div class="row form-group">
+                    <div class="form-row form-group">
                         <div class="col-md-2">
                             <select id="make" class="form-control" name="make">
-                                <option selected></option>
+                                <option value="" disabled selected hidden>Make</option>
+                                <option value=""></option>
                                 @foreach($makes as $make)
-                                    <option value="{{ $make->make }}">{{ $make->make }}</option>
+                                    <option value="{{ $make->make }}" {{ isset($_GET['make']) && $_GET['make'] == $make->make ? "selected" : "" }}>{{ $make->make }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="col-md-2">
                             <select id="category" class="form-control" name="category">
-                                <option selected></option>
+                                <option value="" disabled selected hidden>Categorie</option>
+                                <option value=""></option>
                                 @foreach($categories as $category)
-                                    <option value="{{ $category->category }}">{{ $category->category }}</option>
+                                    <option value="{{ $category->category }}" {{ isset($_GET['category']) && $_GET['category'] == $category->category ? "selected" : "" }}>{{ $category->category }}</option>
                                 @endforeach
                             </select>
                         </div>
 
                         <div class="col-md-6">
-                            <input id="name" type="text" class="form-control" name="name" placeholder="name" value="">
+                            <input id="name" type="text" class="form-control" name="name" placeholder="Name" value="{{ isset($_GET['name']) ? $_GET['name'] : ""}}">
                         </div>
 
                         <div class="col-md-2">
@@ -47,7 +49,7 @@
         <div class="row">
             <div class="col-md">
                 <table class="table table-striped table-hover">
-                    <caption>Cars - {{ $count }} results - <a href="{{ route('cars.new') }}">new</a> </caption>
+                    <caption>{{ $cars->total() }} results ♦ <a href="{{ route('cars.new') }}">new</a></caption>
                     <thead class="thead-dark">
                     <tr>
                         <th scope="col" class="text-left" style="width: 15%">Make</th>
@@ -62,8 +64,11 @@
                     @for($i = 0; $i < count($cars); $i++)
                         <tr>
                             <td class="text-left">{{ $cars[$i]->make }}</td>
-                            <td class="text-left"><a href="{{ route('cars.view', ['id' => $cars[$i]->id]) }}">{{ $cars[$i]->name }}</a></td>
-                            <td class="text-left"><span class="badge badge-primary">{{ $cars[$i]->car_count }}</span></td>
+                            <td class="text-left"><a
+                                        href="{{ route('cars.view', ['id' => $cars[$i]->id]) }}">{{ $cars[$i]->name }}</a>
+                            </td>
+                            <td class="text-left"><span class="badge badge-primary">{{ $cars[$i]->car_count }}</span>
+                            </td>
                             <td class="text-left">{{ $cars[$i]->category }}</td>
                             <td class="text-right">{{ $cars[$i]->power }}</td>
                             <td class="text-right">{{ number_format($cars[$i]->price, 0, ',', '.') }}</td>

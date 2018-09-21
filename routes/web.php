@@ -16,16 +16,29 @@ Route::get('/', [
     'as' => 'pages.index'
 ]);
 
+/** CARS */
+
 Route::group(['prefix' => 'cars'], function () {
+    // INDEX
+
     Route::get('', [
         'uses' => 'CarController@getCarsIndex',
         'as' => 'cars.index'
     ]);
 
+    // VIEW
+
     Route::get('view/{id}', [
         'uses' => 'CarController@getCarsView',
         'as' => 'cars.view'
     ]);
+
+    Route::post('view/{id}', [
+        'uses' => 'CarController@postCarsView',
+        'as' => 'cars.view'
+    ]);
+
+    // EDIT
 
     Route::get('edit/{id}', [
         'uses' => 'CarController@getCarsEdit',
@@ -36,6 +49,8 @@ Route::group(['prefix' => 'cars'], function () {
         'uses' => 'CarController@postCarsEdit',
         'as' => 'cars.edit'
     ]);
+
+    // NEW
 
     Route::get('new', [
         'uses' => 'CarController@getCarsNew',
@@ -48,14 +63,38 @@ Route::group(['prefix' => 'cars'], function () {
     ]);
 });
 
+/** STATS */
+
 Route::group(['prefix' => 'stats'], function () {
+    // INDEX
+
     Route::get('', [
-        'uses' => 'CarController@getStatsIndex',
+        'uses' => 'StatController@getStatsIndex',
         'as' => 'stats.index'
     ]);
 });
 
+/** COMPARE */
+
+Route::group(['prefix' => 'compare'], function () {
+    // INDEX
+
+    Route::get('', [
+        'uses' => 'CompareController@getCompareIndex',
+        'as' => 'compare.index'
+    ]);
+
+    Route::post('', [
+        'uses' => 'CompareController@postCompareIndex',
+        'as' => 'compare.index'
+    ]);
+});
+
+/** API */
+
 Route::group(['prefix' => 'api'], function () {
+    // MAKES
+
     Route::get('makes', [
         'uses' => 'ApiController@apiMakesIndex'
     ]);
@@ -64,6 +103,8 @@ Route::group(['prefix' => 'api'], function () {
         'uses' => 'ApiController@apiMakesGet'
     ]);
 
+    // CATEGORIES
+
     Route::get('categories/', [
         'uses' => 'ApiController@apiCategoriesIndex'
     ]);
@@ -71,6 +112,8 @@ Route::group(['prefix' => 'api'], function () {
     Route::get('categories/{category}', [
         'uses' => 'ApiController@apiCategoriesGet'
     ]);
+
+    // DRIVES
 
     Route::get('drives/', [
         'uses' => 'ApiController@apiDrivesIndex'
